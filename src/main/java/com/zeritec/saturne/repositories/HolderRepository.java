@@ -8,5 +8,5 @@ import com.zeritec.saturne.models.Holder;
 
 public interface HolderRepository extends CrudRepository<Holder, Integer> {
 
-	Optional<Holder> findByCode(String code);
+	//Optional<Holder> findByCode(String code);
 }

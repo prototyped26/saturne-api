@@ -1,12 +1,18 @@
 package com.zeritec.saturne.services;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zeritec.saturne.models.Intermediary;
+import com.zeritec.saturne.models.request.RequestIntermediary;
 import com.zeritec.saturne.repositories.IntermediaryRepository;
+import com.zeritec.saturne.utils.DateUtils;
 
 @Service
 public class IntermediaryService {
@@ -90,4 +96,22 @@ public class IntermediaryService {
 			throw new RuntimeException("Erreur de suppression " + e.getMessage());
 		}
 	}
+	
+	public Intermediary convertRequest(RequestIntermediary req) {
+		Intermediary inter = new Intermediary();
+		
+		inter.setLabel(req.getLabel());
+		inter.setHead(req.getHead());
+		inter.setApprovalNumber(req.getApprovalNumber());
+		inter.setApprovalDate(DateUtils.asDate(req.getApprovalDate()));
+		inter.setLeaderName(req.getLeaderName());
+		inter.setLeaderStatus(req.getLeaderStatus());
+		inter.setApprovalNumberTwo(req.getApprovalNumberTwo());
+		inter.setApprovalDateTwo(DateUtils.asDate(req.getApprovalDateTwo()));
+		inter.setAdress(req.getAdress());
+		inter.setContacts(req.getContacts());
+		
+		return inter;
+	}
+
 }

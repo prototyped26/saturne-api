@@ -14,36 +14,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zeritec.saturne.exception.InformationException;
-import com.zeritec.saturne.models.Category;
-import com.zeritec.saturne.models.Intermediary;
+import com.zeritec.saturne.models.Holder;
 import com.zeritec.saturne.models.Organization;
 import com.zeritec.saturne.models.RequestResponse;
-import com.zeritec.saturne.models.request.RequestCategory;
-import com.zeritec.saturne.models.request.RequestIntermediary;
-import com.zeritec.saturne.services.CategoryService;
-import com.zeritec.saturne.services.IntermediaryService;
+import com.zeritec.saturne.services.HolderService;
 import com.zeritec.saturne.services.OrganizationService;
 
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
-public class IntermidiaryController {
+public class OrganizationController {
+
+	@Autowired
+	private OrganizationService service;
 	
 	@Autowired
-	private IntermediaryService service;
+	private HolderService holderService;
 	
-	@Autowired
-	private CategoryService categoryService;
-	
-	@Autowired
-	private OrganizationService organizationService;
-	
-	@GetMapping("/intermediaries")
-	public ResponseEntity<RequestResponse> list() {
+	@GetMapping("/intermediaries/organizations")
+	public ResponseEntity<RequestResponse> listOrganizations() {
 		RequestResponse response = new RequestResponse();
 		try {
-			Iterable<Intermediary> data = service.getAll();
+			Iterable<Organization> data = service.getAll();
 			response.setData(data);
 			
 			return new ResponseEntity<>(response, HttpStatus.OK);
@@ -53,46 +46,32 @@ public class IntermidiaryController {
 		}
 	}
 	
-	@GetMapping("/intermediaries/{id}")
-	public ResponseEntity<RequestResponse> getOne(@PathVariable("id") int id) {
+	@GetMapping("/intermediaries/organizations/{id}")
+	public ResponseEntity<RequestResponse> getOrganization(@PathVariable("id") int id) {
 		RequestResponse response = new RequestResponse();
 		
 		try {
-			Optional<Intermediary> data = service.getById(id);
+			Optional<Organization> data = service.getById(id);
 			if (data.isEmpty()) {
-				response.setMessage("Intermédiaire non existant");
+				response.setMessage("L'organisation n existe pas");
 				return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 			} else {
 				response.setData(data.get());
-				return new ResponseEntity<>(response, HttpStatus.OK);
 			}
+			
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
 			response.setMessage(e.getMessage());
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 	}
 	
-	@PostMapping("/intermediaries")
-	public ResponseEntity<RequestResponse> create(@Valid @RequestBody RequestIntermediary req) {
+	@PostMapping("/intermediaries/organizations")
+	public ResponseEntity<RequestResponse> createOrganization(@Valid @RequestBody Organization org) {
 		RequestResponse response = new RequestResponse();
-		
-		Intermediary inter = service.convertRequest(req);
-		
-		Optional<Category> catOpt = categoryService.getById(req.getCategoryId());
-		if (catOpt.isEmpty()) {
-			response.setMessage("Catégorie inconnue, vérifier !");
-			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-		} else {
-			inter.setCategory(catOpt.get());
-		}
-		
-		if (req.getOrganizationId() != null) {
-			Optional<Organization> org = organizationService.getById(req.getOrganizationId());
-			if (org.isPresent()) inter.setOrganization(org.get());
-		}
-		
+			
 		try {
-			Intermediary d = service.create(inter);
+			Organization d = service.create(org);
 			response.setData(d);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
@@ -102,26 +81,12 @@ public class IntermidiaryController {
 		}
 	}
 	
-	@PostMapping("/intermediaries/{id}")
-	public ResponseEntity<RequestResponse> update(@PathVariable("id") int id,@Valid @RequestBody RequestIntermediary req) {
+	@PostMapping("/intermediaries/organizations/{id}")
+	public ResponseEntity<RequestResponse> updateOrganization(@PathVariable("id") int id,@Valid @RequestBody Organization org) {
 		RequestResponse response = new RequestResponse();
-		Intermediary inter = service.convertRequest(req);
-		
-		Optional<Category> catOpt = categoryService.getById(req.getCategoryId());
-		if (catOpt.isEmpty()) {
-			response.setMessage("Catégorie inconnue, vérifier !");
-			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-		} else {
-			inter.setCategory(catOpt.get());
-		}
-		
-		if (req.getOrganizationId() != null) {
-			Optional<Organization> org = organizationService.getById(req.getOrganizationId());
-			if (org.isPresent()) inter.setOrganization(org.get());
-		}
 		
 		try {
-			Optional<Intermediary> r = service.update(id, inter);
+			Optional<Organization> r = service.update(id, org);
 			if (r.isPresent()) {
 				response.setData(r.get());
 				return new ResponseEntity<>(response, HttpStatus.OK);
@@ -137,8 +102,8 @@ public class IntermidiaryController {
 	}
 	
 	
-	@DeleteMapping("/intermediaries/{id}")
-	public ResponseEntity<RequestResponse> delete(@PathVariable("id") int id) {
+	@DeleteMapping("/intermediaries/organizations/{id}")
+	public ResponseEntity<RequestResponse> deleteOrganization(@PathVariable("id") int id) {
 		RequestResponse response = new RequestResponse();
 		
 		try {
@@ -156,15 +121,15 @@ public class IntermidiaryController {
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 	}
-
+	
 	/**
-	 * Categories routes
+	 * Holder routes 
 	 */
-	@GetMapping("/intermediaries/categories")
-	public ResponseEntity<RequestResponse> listCategories() {
+	@GetMapping("/holders")
+	public ResponseEntity<RequestResponse> listHolders() {
 		RequestResponse response = new RequestResponse();
 		try {
-			Iterable<Category> data = categoryService.getAll();
+			Iterable<Holder> data = holderService.getAll();
 			response.setData(data);
 			
 			return new ResponseEntity<>(response, HttpStatus.OK);
@@ -174,12 +139,12 @@ public class IntermidiaryController {
 		}
 	}
 	
-	@GetMapping("/intermediaries/categories/{id}")
-	public ResponseEntity<RequestResponse> getCategory(@PathVariable("id") int id) {
+	@GetMapping("/holders/{id}")
+	public ResponseEntity<RequestResponse> getHolder(@PathVariable("id") int id) {
 		RequestResponse response = new RequestResponse();
 		
 		try {
-			Optional<Category> data = categoryService.getById(id);
+			Optional<Holder> data = holderService.getById(id);
 			response.setData(data);
 			
 			return new ResponseEntity<>(response, HttpStatus.OK);
@@ -189,12 +154,20 @@ public class IntermidiaryController {
 		}
 	}
 	
-	@PostMapping("/intermediaries/categories")
-	public ResponseEntity<RequestResponse> createCategoryn(@Valid @RequestBody RequestCategory cat) {
+	@PostMapping("/holders")
+	public ResponseEntity<RequestResponse> createHolder(@Valid @RequestBody Holder o) {
 		RequestResponse response = new RequestResponse();
+		
+		Optional<Organization> org = service.getById(o.getOrganizationId());
+		if (org.isEmpty()) {
+			response.setMessage("Il faut une organisation, veuillez vérifier");
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		} else {
+			o.setOrganization(org.get());
+		}
 			
 		try {
-			Category d = categoryService.create(categoryService.convertRequest(cat));
+			Holder d = holderService.create(o);
 			response.setData(d);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
@@ -204,12 +177,20 @@ public class IntermidiaryController {
 		}
 	}
 	
-	@PostMapping("/intermediaries/categories/{id}")
-	public ResponseEntity<RequestResponse> updateCategory(@PathVariable("id") int id,@Valid @RequestBody RequestCategory cat) {
+	@PostMapping("/holders/{id}")
+	public ResponseEntity<RequestResponse> updateHolder(@PathVariable("id") int id,@Valid @RequestBody Holder o) {
 		RequestResponse response = new RequestResponse();
 		
+		Optional<Organization> org = service.getById(o.getOrganizationId());
+		if (org.isEmpty()) {
+			response.setMessage("Il faut une organisation, veuillez vérifier");
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		} else {
+			o.setOrganization(org.get());
+		}
+		
 		try {
-			Optional<Category> r = categoryService.update(id, categoryService.convertRequest(cat));
+			Optional<Holder> r = holderService.update(id, o);
 			if (r.isPresent()) {
 				response.setData(r.get());
 				return new ResponseEntity<>(response, HttpStatus.OK);
@@ -225,12 +206,12 @@ public class IntermidiaryController {
 	}
 	
 	
-	@DeleteMapping("/intermediaries/categories/{id}")
-	public ResponseEntity<RequestResponse> deleteCategory(@PathVariable("id") int id) {
+	@DeleteMapping("/holders/{id}")
+	public ResponseEntity<RequestResponse> deleteHolder(@PathVariable("id") int id) {
 		RequestResponse response = new RequestResponse();
 		
 		try {
-			boolean r = categoryService.delete(id);
+			boolean r = holderService.delete(id);
 			if (r) {
 				response.setMessage("element supprimé !");
 				return new ResponseEntity<>(response, HttpStatus.OK);

@@ -1,5 +1,6 @@
 package com.zeritec.saturne.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
@@ -17,6 +18,7 @@ import lombok.Data;
 @Entity
 @Table(name = "holder")
 @Data
+@JsonIgnoreProperties({"organization_id"})
 public class Holder {
 
 	@Id
@@ -36,8 +38,10 @@ public class Holder {
 	
 	private String status;
 	
+	@Column(name = "organization_id", insertable = false, updatable = false)
 	@JsonProperty("organization_id")
-	private int organizationId;
+	@NotNull(message = "L'organisation est obligatoire")
+	private Integer organizationId;
 	
 	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
 	@JoinColumn(name = "organization_id")

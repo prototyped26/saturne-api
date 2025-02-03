@@ -1,33 +1,16 @@
-package com.zeritec.saturne.models;
+package com.zeritec.saturne.models.request;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-@Entity
-@Table(name = "intermediary")
 @Data
-@JsonIgnoreProperties({"organization_id", "category_id"})
-public class Intermediary {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	
+public class RequestIntermediary {
 	@NotNull
 	@Size(min = 3, max = 256, message = "La désignation est obligatoire")
 	private String label;
@@ -45,7 +28,7 @@ public class Intermediary {
 	@NotNull(message = "La date d'agrément est obligatoire")
 	@Column(name = "approval_date")
 	@JsonProperty("approval_date")
-	private Date approvalDate;
+	private String approvalDate;
 	
 	@NotNull(message = "Le nom du dirigéant est obligatoire")
 	@Column(name = "leader_name")
@@ -58,7 +41,7 @@ public class Intermediary {
 	
 	@Column(name = "approval_date_two")
 	@JsonProperty("approval_date_two")
-	private Date approvalDateTwo;
+	private String approvalDateTwo;
 	
 	@Column(name = "leader_status")
 	@JsonProperty("leader_status")
@@ -68,11 +51,12 @@ public class Intermediary {
 	
 	private String contacts;
 	
-	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@JoinColumn(name = "category_id")
-	private Category category;
+	@Column(name = "category_id", insertable = false, updatable = false)
+	@NotNull(message = "La Category est obligatoire ")
+	@JsonProperty("category_id")
+	private Integer categoryId;
 	
-	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@JoinColumn(name = "organization_id")
-	private Organization organization;
+	@Column(name = "organization_id", insertable = false, updatable = false)
+	@JsonProperty("organization_id")
+	private Integer organizationId;
 }

@@ -41,6 +41,7 @@ public class VisaApplication {
 	@JsonProperty("created_at")
 	private Date createdAt;
 	
+	@Column(name = "intermediary_id", insertable = false, updatable = false)
 	@JsonProperty("intermediary_id")
 	private int intermediaryId;
 	

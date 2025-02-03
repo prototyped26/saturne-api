@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zeritec.saturne.models.Category;
+import com.zeritec.saturne.models.request.RequestCategory;
 import com.zeritec.saturne.repositories.CategoryRepository;
 
 @Service
@@ -81,5 +82,13 @@ public class CategoryService {
 		} catch (Exception e) {
 			throw new RuntimeException("Erreur de suppression " + e.getMessage());
 		}
+	}
+	
+	public Category convertRequest(RequestCategory req) {
+		Category cat = new Category();
+		cat.setCode(req.getCode());
+		cat.setLabel(req.getLabel());
+		
+		return cat;
 	}
 }
