@@ -1,5 +1,7 @@
 package com.zeritec.saturne.models;
 
+import java.util.List;
+
 import lombok.Data;
 
 @Data
@@ -8,9 +10,7 @@ public class RequestResponse {
 	
 	public int status;
 	
-	public int code;
+	public List<String> errors;
 	
 	public Object data;
-	
-	public Object none;
 }

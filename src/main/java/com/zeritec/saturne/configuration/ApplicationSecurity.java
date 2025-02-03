@@ -51,7 +51,7 @@ public class ApplicationSecurity {
 				.csrf(csrf -> csrf.disable())
 				.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 				.authorizeHttpRequests( auth -> {
-					auth.requestMatchers("/", "api/register", "api/login", "/images/**").permitAll();
+					auth.requestMatchers("/", "api/roles", "api/register", "api/login", "/images/**").permitAll();
 					auth.anyRequest().authenticated();
 				})
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

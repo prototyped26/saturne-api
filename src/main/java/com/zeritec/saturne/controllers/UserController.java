@@ -92,7 +92,6 @@ public class UserController {
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
 			response.setMessage(e.getMessage());
-			response.setCode(HttpStatus.BAD_REQUEST.value());
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -109,12 +108,10 @@ public class UserController {
 				return new ResponseEntity<>(response, HttpStatus.OK);
 			} else {
 				response.setMessage("Utilisateur non existant");
-				response.setCode(HttpStatus.BAD_REQUEST.value());
 				return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			response.setMessage(e.getMessage());
-			response.setCode(HttpStatus.BAD_REQUEST.value());
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -131,12 +128,10 @@ public class UserController {
 				return new ResponseEntity<>(response, HttpStatus.OK);
 			} else {
 				response.setMessage("Erreur de changement, veuillez vérifier les données.");
-				response.setCode(HttpStatus.BAD_REQUEST.value());
 				return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			response.setMessage(e.getMessage());
-			response.setCode(HttpStatus.BAD_REQUEST.value());
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -155,7 +150,6 @@ public class UserController {
 			}
 		} catch (Exception e) {
 			response.setMessage(e.getMessage());
-			response.setCode(HttpStatus.BAD_REQUEST.value());
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 		
@@ -173,12 +167,10 @@ public class UserController {
 				return new ResponseEntity<>(response, HttpStatus.OK);
 			} else {
 				response.setMessage("Erreur de traitement, veuillez vérifier les données.");
-				response.setCode(HttpStatus.BAD_REQUEST.value());
 				return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			response.setMessage(e.getMessage());
-			response.setCode(HttpStatus.BAD_REQUEST.value());
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -189,7 +181,6 @@ public class UserController {
 		
 		if (id == 1) {
 			response.setMessage("Impossible de supprimé cet utilisateur.");
-			response.setCode(HttpStatus.BAD_REQUEST.value());
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 		
@@ -201,12 +192,10 @@ public class UserController {
 				return new ResponseEntity<>(response, HttpStatus.OK);
 			} else {
 				response.setMessage("Erreur de suppression veuillez vérifier les données.");
-				response.setCode(HttpStatus.BAD_REQUEST.value());
 				return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			response.setMessage(e.getMessage());
-			response.setCode(HttpStatus.BAD_REQUEST.value());
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 	}
