@@ -41,6 +41,15 @@ public class CategoryService {
 		}
 	}
 	
+	public Optional<Category> getByLabel(String code) {
+		
+		try {
+			return repository.findByLabel(code);
+		} catch (Exception e) {
+			throw new RuntimeException("Erreur de recherche  d action " + e.getMessage());
+		}
+	}
+	
 	public Category create(Category category) {
 		try {
 			return repository.save(category);

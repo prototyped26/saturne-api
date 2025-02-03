@@ -1,7 +1,14 @@
 package com.zeritec.saturne.controllers;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +18,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.zeritec.saturne.exception.InformationException;
 import com.zeritec.saturne.models.Category;
@@ -23,6 +32,7 @@ import com.zeritec.saturne.models.request.RequestIntermediary;
 import com.zeritec.saturne.services.CategoryService;
 import com.zeritec.saturne.services.IntermediaryService;
 import com.zeritec.saturne.services.OrganizationService;
+import com.zeritec.saturne.utils.DateUtils;
 
 import jakarta.validation.Valid;
 
@@ -157,6 +167,53 @@ public class IntermidiaryController {
 		}
 	}
 
+	@PostMapping("/intermediaries/import")
+	public ResponseEntity<RequestResponse> importData(@RequestParam("file") MultipartFile file) throws IOException {
+		RequestResponse response = new RequestResponse();
+		
+		List<Intermediary> intermediaries = new ArrayList<>();
+		
+		Workbook workbook = new XSSFWorkbook(file.getInputStream());
+		
+		for(int i=2 ; i < workbook.getSheetAt(0).getPhysicalNumberOfRows(); i++) {
+			Row row = workbook.getSheetAt(0).getRow(i);
+			
+			Intermediary inter = new Intermediary();
+			
+			Optional<Category> cat = categoryService.getByLabel(row.getCell(0).getStringCellValue());
+			if (cat.isPresent()) {
+				inter.setCategory(cat.get());
+			}
+		
+			inter.setLabel(row.getCell(1).getStringCellValue());
+			inter.setHead(row.getCell(2).getStringCellValue());
+			inter.setApprovalNumber(row.getCell(3).getStringCellValue());
+			inter.setApprovalDate(row.getCell(4).getDateCellValue());
+			inter.setLeaderName(row.getCell(5).getStringCellValue());
+			inter.setLeaderStatus(row.getCell(6).getStringCellValue());
+			inter.setApprovalNumberTwo(row.getCell(7).getStringCellValue());
+			inter.setApprovalDateTwo(row.getCell(8).getDateCellValue());
+			inter.setAdress(row.getCell(9).getStringCellValue().trim().replaceAll("\\s{2,}", " "));
+			inter.setContacts(row.getCell(10).getStringCellValue().trim().replaceAll("\\s{2,}", " "));
+			
+			intermediaries.add(inter);
+		}
+		
+		List<Intermediary> saves = new ArrayList<>();
+		for(Intermediary intermediary: intermediaries) {
+			try {
+				Intermediary s = service.create(intermediary);
+				saves.add(s);
+			} catch (Exception e) {
+				// TODO: handle exception
+				System.out.println(e.getMessage());
+			}
+		}
+		
+		response.setData(saves);
+		
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 	/**
 	 * Categories routes
 	 */

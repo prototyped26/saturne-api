@@ -37,6 +37,15 @@ public class IntermediaryService {
 		}
 	}
 	
+	public Optional<Intermediary> getByLabel(String label) {
+		
+		try {
+			return repository.findByLabel(label);
+		} catch (Exception e) {
+			throw new RuntimeException("Erreur de recherche d un intermédiaire " + e.getMessage());
+		}
+	}
+	
 	public Optional<Intermediary> getByApprovalNumber(String number) {
 		
 		try {
