@@ -40,6 +40,15 @@ public class DistributionService {
 		}
 	}
 	
+	public Optional<Distribution> getByLabel(String code) {
+		
+		try {
+			return repository.findByLabel(code);
+		} catch (Exception e) {
+			throw new RuntimeException("Erreur de recherche  d action " + e.getMessage());
+		}
+	}
+	
 	public Distribution create(Distribution data) {
 		try {
 			return repository.save(data);

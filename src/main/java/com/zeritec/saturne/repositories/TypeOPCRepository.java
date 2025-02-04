@@ -9,4 +9,6 @@ import com.zeritec.saturne.models.TypeOpc;
 public interface TypeOPCRepository extends CrudRepository<TypeOpc, Integer> {
 
 	Optional<TypeOpc> findByCode(String code);
+	
+	Optional<TypeOpc> findByLabel(String label);
 }

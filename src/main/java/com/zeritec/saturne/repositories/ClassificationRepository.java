@@ -9,4 +9,6 @@ import com.zeritec.saturne.models.Classification;
 public interface ClassificationRepository extends CrudRepository<Classification, Integer> {
 
 	Optional<Classification> findByCode(String code);
+	
+	Optional<Classification> findByLabel(String label);
 }

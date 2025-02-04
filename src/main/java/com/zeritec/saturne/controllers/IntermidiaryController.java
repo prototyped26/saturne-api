@@ -199,6 +199,8 @@ public class IntermidiaryController {
 			intermediaries.add(inter);
 		}
 		
+		workbook.close();
+		
 		List<Intermediary> saves = new ArrayList<>();
 		for(Intermediary intermediary: intermediaries) {
 			try {

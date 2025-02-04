@@ -40,6 +40,15 @@ public class DepositaryService {
 		}
 	}
 	
+	public Optional<Depositary> getByLabel(String code) {
+		
+		try {
+			return repository.findByLabel(code);
+		} catch (Exception e) {
+			throw new RuntimeException("Erreur de recherche  d action " + e.getMessage());
+		}
+	}
+	
 	public Depositary create(Depositary data) {
 		try {
 			return repository.save(data);

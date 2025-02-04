@@ -9,4 +9,6 @@ import com.zeritec.saturne.models.Depositary;
 public interface DepositaryRepository extends CrudRepository<Depositary, Integer> {
 
 	Optional<Depositary> findByCode(String code);
+	
+	Optional<Depositary> findByLabel(String label);
 }

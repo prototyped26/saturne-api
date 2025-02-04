@@ -40,6 +40,15 @@ public class TypeOpcService {
 		}
 	}
 	
+	public Optional<TypeOpc> getByLabel(String code) {
+		
+		try {
+			return repository.findByLabel(code);
+		} catch (Exception e) {
+			throw new RuntimeException("Erreur de recherche  d action " + e.getMessage());
+		}
+	}
+	
 	public TypeOpc create(TypeOpc data) {
 		try {
 			return repository.save(data);

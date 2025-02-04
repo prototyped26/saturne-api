@@ -9,4 +9,6 @@ import com.zeritec.saturne.models.Distribution;
 public interface DistributionRepository extends CrudRepository<Distribution, Integer> {
 
 	Optional<Distribution> findByCode(String code);
+	
+	Optional<Distribution> findByLabel(String label);
 }

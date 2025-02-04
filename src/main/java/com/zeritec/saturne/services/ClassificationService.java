@@ -40,6 +40,15 @@ public class ClassificationService {
 		}
 	}
 	
+	public Optional<Classification> getByLabel(String label) {
+		
+		try {
+			return repository.findByLabel(label);
+		} catch (Exception e) {
+			throw new RuntimeException("Erreur de recherche  d action " + e.getMessage());
+		}
+	}
+	
 	public Classification create(Classification data) {
 		try {
 			return repository.save(data);
