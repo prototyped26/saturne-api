@@ -84,4 +84,12 @@ public class OpcService {
 			throw new RuntimeException("Erreur de suppression " + e.getMessage());
 		}
 	}
+
+	public Optional<Opc> getByFundAndWeek(Integer fundId, Integer weekId) {
+		try {
+			return repository.findByFundIdAndWeekId(fundId, weekId);
+		} catch (Exception e) {
+			throw new RuntimeException("Erreur de recherche OPCV " + e.getMessage());
+		}
+	}
 }

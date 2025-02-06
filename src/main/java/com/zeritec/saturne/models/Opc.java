@@ -2,6 +2,7 @@ package com.zeritec.saturne.models;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
@@ -19,6 +20,7 @@ import lombok.Data;
 @Entity
 @Table(name = "opc")
 @Data
+@JsonIgnoreProperties({"fund.type_opc"})
 public class Opc {
 
 	@Id

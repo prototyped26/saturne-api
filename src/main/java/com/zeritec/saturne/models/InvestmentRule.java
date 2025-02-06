@@ -31,6 +31,6 @@ public class InvestmentRule {
 	private Opc opc;
 	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@JoinColumn(name = "investment_rule_type")
+	@JoinColumn(name = "investment_rule_type_id")
 	private InvestmentRuleType investmentRuleType;
 }

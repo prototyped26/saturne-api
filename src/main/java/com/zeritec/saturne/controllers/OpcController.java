@@ -113,7 +113,7 @@ public class OpcController {
         	} else {
         		week = weekService.currentWeekOfYear(activeYear.getId());
         	}
-        	
+               	
         	Workbook workbook = new XSSFWorkbook(file.getInputStream());
         	// GET FUND 
         	Fund fund = new Fund();
@@ -124,16 +124,26 @@ public class OpcController {
         	// si le fond n'existe pas 
         	if (fundOpt.isEmpty()) {
         		workbook.close();
-        		response.setMessage("Attention cette Action ne peut se poursuivre car le fond n'est pas reconnu !");
-    			//return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        		response.setMessage("Attention cette Action ne peut se poursuivre car le fond n'est pas reconnu, veuillez vérifier les FCP du système !");
+    			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         	} else {
         		fund = fundOpt.get();
         	}
         	
-        	Opc opc = new Opc();
-        	opc.setCreatedAt(new Date());
-        	opc.setFund(fund);
-        	opc.setWeek(week);
+        	// Check if exist OPC for this week with this informations 
+        	Optional<Opc> exist = service.getByFundAndWeek(fund.getId(), week.getId());
+        	if (exist.isPresent()) {
+        		workbook.close();
+        		response.setMessage("Un seul rapport est soumis par semaine pour chaque Fond, veuillez contacter l'administrateur en cas de soucis.");
+        		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        	}
+        	
+        	Opc opcTemp = new Opc();
+        	opcTemp.setCreatedAt(new Date());
+        	opcTemp.setFund(fund);
+        	opcTemp.setWeek(week);
+        	
+        	Opc opc = service.create(opcTemp);
         	
         	Iterable<OpcvmType> opcvmTypes = typeOpcvmService.getByGroup();
         	Iterable<InvestmentRuleType> investmentRuleTypes = investmentRuleTypeService.getAll();
@@ -144,9 +154,27 @@ public class OpcController {
         	List<AssetLine> lines = assetLineService.extractFromSheet(workbook, assetTypes);
         	List<Investor> investors = investorService.extractFromSheet(workbook);
         	
-        	lines.forEach(line -> line.setOpc(opc));
+        	opcvms.forEach(opcvm -> {
+        		opcvm.setOpc(opc);
+        		opcvmService.create(opcvm);
+        	});
         	
-        	response.setData(investors);
+        	rules.forEach(rule -> {
+        		rule.setOpc(opc);
+        		investmentRuleService.create(rule);
+        	});
+        	
+        	lines.forEach(line -> {
+        		line.setOpc(opc);
+        		assetLineService.create(line);
+        	});
+        	
+        	investors.forEach(investor -> {
+        		investor.setOpc(opc);
+        		investorService.create(investor);
+        	});
+        	
+        	response.setData(opc);
         	
     		workbook.close();
         	 

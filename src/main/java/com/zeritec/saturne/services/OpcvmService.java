@@ -119,9 +119,10 @@ public class OpcvmService {
 		boolean write = false;
 		for(int i=14 ; i < workbook.getSheetAt(0).getPhysicalNumberOfRows(); i++) {
 			Row row = workbook.getSheetAt(0).getRow(i);
+			boolean put = true;
 			
 			if (row == null) {
-				return opcvms;
+				stop = true;
 			} else {
 				String label = row.getCell(0).getStringCellValue();
 				if (label.equals(compare)) {
@@ -129,29 +130,34 @@ public class OpcvmService {
 				} else {
 					if (write) {
 						
-						if (label.length() != 0 && row.getCell(3).getCellType() != CellType.BLANK) {
-							Opcvm opcvm = new Opcvm();
+						if (label.length() != 0) {
 							
-							opcvm.setLabel(label);
 							if (label.toLowerCase().contains("total")) {
 								stop = true;
-							} 
+								put = true;
+							} else {
+								if (row.getCell(3).getCellType() == CellType.BLANK) put = false;
+							}
 							
-							opcvm.setNumber(ExtractionSheetUtils.extractNumber(row.getCell(1)));
-							opcvm.setCours(ExtractionSheetUtils.extractNumber(row.getCell(2)));
-							opcvm.setValue(ExtractionSheetUtils.extractNumber(row.getCell(3)));
-							opcvm.setPercent(ExtractionSheetUtils.extractNumber(row.getCell(4)));
-							opcvm.setOpcvmType(type);
-							
-							opcvms.add(opcvm);
+							if (put) {
+								Opcvm opcvm = new Opcvm();
+								opcvm.setLabel(label);
+								opcvm.setNumber(ExtractionSheetUtils.extractNumber(row.getCell(1)));
+								opcvm.setCours(ExtractionSheetUtils.extractNumber(row.getCell(2)));
+								opcvm.setValue(ExtractionSheetUtils.extractNumber(row.getCell(3)));
+								opcvm.setPercent(ExtractionSheetUtils.extractNumber(row.getCell(4)));
+								opcvm.setOpcvmType(type);
+								
+								opcvms.add(opcvm);
+							}
 						}
 						
 					}
 				}
-				
-				if (stop) {
-					return opcvms;
-				}
+			}
+			
+			if (stop) {
+				break;
 			}
 		}
 		return opcvms;

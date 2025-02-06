@@ -2,7 +2,6 @@ package com.zeritec.saturne.models;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,11 +31,11 @@ public class Opcvm {
 	
 	private String status; // T for total or E for element
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinColumn(name = "opc_id")
 	private Opc opc;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinColumn(name = "opcvm_type_id")
 	private OpcvmType opcvmType;
 }
