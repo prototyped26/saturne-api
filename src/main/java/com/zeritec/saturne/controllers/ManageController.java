@@ -1,7 +1,6 @@
 package com.zeritec.saturne.controllers;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -237,8 +236,7 @@ public class ManageController {
 	public ResponseEntity<RequestResponse> informations() {
 		
 		RequestResponse response = new RequestResponse();
-		Calendar calendar = Calendar.getInstance();  
-        int weekNumber = calendar.get(Calendar.WEEK_OF_YEAR); 
+        int weekNumber = WeekService.currentWeekNumber(); 
 		
 		try {
 			

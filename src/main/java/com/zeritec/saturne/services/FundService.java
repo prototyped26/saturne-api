@@ -113,4 +113,12 @@ public class FundService {
 		
 		return fund;
 	}
+	
+	public String normalizeApprovalNumber(String str) {
+		String res =  str.replace("N", "");
+		res = res.replace("°", "");
+		res = res.replaceAll("\\s", "");
+		
+		return res;
+	}
 }

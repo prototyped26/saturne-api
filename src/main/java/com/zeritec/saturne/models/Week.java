@@ -2,6 +2,8 @@ package com.zeritec.saturne.models;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -17,6 +19,7 @@ import lombok.Data;
 @Entity
 @Table(name = "week")
 @Data
+@JsonIgnoreProperties({"year"})
 public class Week {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

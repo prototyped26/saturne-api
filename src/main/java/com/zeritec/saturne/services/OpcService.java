@@ -5,16 +5,16 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.zeritec.saturne.models.OpcvmType;
-import com.zeritec.saturne.repositories.OpcvmTypeRepository;
+import com.zeritec.saturne.models.Opc;
+import com.zeritec.saturne.repositories.OpcRepository;
 
 @Service
-public class OpcvmTypeService {
+public class OpcService {
 
 	@Autowired
-	private OpcvmTypeRepository repository;
+	private OpcRepository repository;
 	
-	public Iterable<OpcvmType> getAll() {
+	public Iterable<Opc> getAll() {
 		try {
 			return repository.findAll();
 		} catch (Exception e) {
@@ -22,33 +22,25 @@ public class OpcvmTypeService {
 		}
 	}
 	
-	public Iterable<OpcvmType> getByGroup() {
-		try {
-			return repository.findByParentIdNull();
-		} catch (Exception e) {
-			throw new RuntimeException("Erreur récupération liste groupée " + e.getMessage());
-		}
-	}
-	
-	public Optional<OpcvmType> getById(Integer id) {
+	public Optional<Opc> getById(Integer id) {
 		
 		try {
 			return repository.findById(id);
 		} catch (Exception e) {
-			throw new RuntimeException("Erreur de recherche catégorie " + e.getMessage());
+			throw new RuntimeException("Erreur de recherche OPCV " + e.getMessage());
 		}
 	}
 	
-	public Optional<OpcvmType> getByCode(String code) {
+	public Iterable<Opc> getByWeek(int week) {
 		
 		try {
-			return repository.findByCode(code);
+			return repository.findByWeekId(week);
 		} catch (Exception e) {
-			throw new RuntimeException("Erreur de recherche  d action " + e.getMessage());
+			throw new RuntimeException("Erreur de recherche  d OPCV " + e.getMessage());
 		}
 	}
 	
-	public OpcvmType create(OpcvmType data) {
+	public Opc create(Opc data) {
 		try {
 			return repository.save(data);
 		} catch (Exception e) {
@@ -56,14 +48,16 @@ public class OpcvmTypeService {
 		}
 	}
 	
-	public Optional<OpcvmType> update(Integer id, OpcvmType data) {
+	public Optional<Opc> update(Integer id, Opc data) {
 		try {
 			
-			Optional<OpcvmType> existing = repository.findById(id);
+			Optional<Opc> existing = repository.findById(id);
 			if (existing.isPresent()) {
-				OpcvmType toSave = existing.get();
-				toSave.setCode(data.getCode());
-				toSave.setLabel(data.getLabel());
+				Opc toSave = existing.get();
+				toSave.setCreatedAt(data.getCreatedAt());
+				toSave.setEstimatedAt(data.getEstimatedAt());
+				toSave.setFund(data.getFund());
+				toSave.setWeek(data.getWeek());
 				
 				return Optional.of(repository.save(toSave));
 			} else {
@@ -78,9 +72,9 @@ public class OpcvmTypeService {
 	public boolean delete(Integer id) {
 		try {
 			
-			Optional<OpcvmType> existing = repository.findById(id);
+			Optional<Opc> existing = repository.findById(id);
 			if (existing.isPresent()) {
-				OpcvmType toDelete = existing.get();
+				Opc toDelete = existing.get();
 				repository.delete(toDelete);
 				return true;
 			} else {

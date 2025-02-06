@@ -94,6 +94,7 @@ public class FundController {
 		RequestResponse response = new RequestResponse();
 		
 		Fund fund = service.convertRequest(req);
+		fund.setApprovalNumber(service.normalizeApprovalNumber(fund.getApprovalNumber()));
 		
 		Optional<TypeOpc> topc = typeOpcService.getById(req.getTypeOpcId());
 		if (topc.isEmpty()) {

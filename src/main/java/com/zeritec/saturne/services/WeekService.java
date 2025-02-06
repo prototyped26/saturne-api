@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -131,5 +132,20 @@ public class WeekService {
 	    } while ((weekOfYear = date.get(WeekFields.of(Locale.UK).weekOfWeekBasedYear())) != initialWeekOfyear);
 	    
 	    return weeks;
+	}
+	
+	public Week currentWeekOfYear(int yearId) {
+		Week week = null;
+		Iterable<Week> weeks = this.getWeekOfYear(yearId);
+		for(Week w: weeks) {
+			if (w.getNumber() == WeekService.currentWeekNumber()) week = w;
+		}
+		
+		return week;
+	}
+	
+	public static int currentWeekNumber() {
+		Calendar calendar = Calendar.getInstance();  
+        return calendar.get(Calendar.WEEK_OF_YEAR); 
 	}
 }
